@@ -118,8 +118,8 @@ cd AI-Receptionist-Agentic-RAG
 ### 2. Le Chiavi (Il file `.env`)
 L'utente prende il file `.env.example`, lo rinomina in `.env` e lo apre. 
 
-**Cosa deve inserire OBBLIGATORIAMENTE:**
-- `DEEPSEEK_API_KEY`: Incolla la sua chiave di DeepSeek (altrimenti l'IA non pensa).
+**Cosa deve inserire :**
+- `DEEPSEEK_API_KEY`: Incolla la sua chiave di DeepSeek (altrimenti l'IA non pensa). 
 - `TAVILY_API_KEY`: Incolla la sua chiave di Tavily (altrimenti il bot non può cercare su internet).
 
 **Cosa può ignorare:**
