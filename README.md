@@ -114,8 +114,39 @@ git clone https://github.com/Christianwork-hub/AI-Receptionist-Agentic-RAG.git
 cd AI-Receptionist-Agentic-RAG
 ```
 
-### 2. Creare l'Ambiente Virtuale (VENV)
-Crea e attiva un ambiente isolato per installare i pacchetti.
+### 2. Creare e Configurare il file `.env` (OBBLIGATORIO)
+Nel progetto troverai un file chiamato **`.env.example`**. 
+Rinominalo in **`.env`** e compila i campi con le tue chiavi API. 
+**ATTENZIONE: Senza le API Key di DeepSeek e Tavily il progetto andrà in errore!**
+(Tranquillo, il `.gitignore` impedirà che il tuo `.env` venga caricato online).
+
+### 3. Configurare Ollama (Embeddings Locali)
+Per analizzare i documenti testuali senza pagare API costose, il sistema usa embedding locali.
+Assicurati di aver installato [Ollama](https://ollama.com/) sul tuo PC e scarica il modello eseguendo:
+```bash
+ollama run bge-m3:latest
+```
+
+---
+
+### METODO 1: Avvio Rapido con Docker (Raccomandato)
+Se hai **Docker** installato sul tuo computer, l'installazione richiede un solo comando.
+Docker scaricherà le dipendenze, creerà il database PostgreSQL (`hotel_db`), creerà le tabelle `stanze` e `prenotazioni` e popolerà i dati mock per te.
+
+1. Assicurati che Docker sia in esecuzione.
+2. Dal terminale esegui:
+```bash
+docker-compose up -d --build
+```
+3. Il server web è ora attivo all'indirizzo **[http://localhost:8000](http://localhost:8000)**.
+
+*(Se non vuoi usare Docker, segui il Metodo 2 qui sotto, altrimenti salta alla sezione Ingestion).*
+
+---
+
+### METODO 2: Installazione Manuale (Senza Docker)
+
+1. **Creare l'Ambiente Virtuale (VENV)**
 **Su Windows:**
 ```bash
 python -m venv venv
@@ -127,57 +158,14 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Installare le Dipendenze
-Con l'ambiente virtuale attivo, installa tutte le librerie necessarie:
+2. **Installare le Dipendenze**
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configurare il file `.env`
-Nel progetto troverai un file chiamato **`.env.example`**. 
-Rinominalo in **`.env`** e compila i campi con le tue chiavi. (Tranquillo, il `.gitignore` impedirà che il tuo `.env` venga caricato online).
-```env
-DATABASE_URI=postgresql://tuo_user:tua_password@localhost:5432/hotel_db
-TAVILY_API_KEY=tua_chiave_tavily_qui
-DEEPSEEK_API_KEY=tua_chiave_deepseek_qui
-
-# Per l'invio delle email automatiche
-EMAIL_MITTENTE=tua_email@gmail.com
-EMAIL_APP_PASSWORD=tua_password_app_google
-EMAIL_DESTINATARIO=email_che_riceve_notifiche@gmail.com
-```
-
-### 5. Configurazione Database PostgreSQL (IMPORTANTE)
-Il progetto si interfaccia con PostgreSQL tramite la variabile `DATABASE_URI`. Questo significa che sei libero di usare qualsiasi metodo per ospitare il database: un'installazione nativa sul tuo PC, un container **Docker**, oppure un servizio in cloud (come Supabase o Neon). DBeaver, pgAdmin o altri client possono essere usati per gestire comodamente le tabelle.
-
-Poiché il tuo DB locale sarà inizialmente **vuoto**, dovrai preparare la struttura base.
-1. Crea un database in PostgreSQL chiamato `hotel_db`.
-2. Crea le tabelle fondamentali (`stanze` e `prenotazioni`). Ecco un esempio dello schema SQL che l'utente finale dovrà lanciare sul proprio DB per far funzionare i tools:
-```sql
-CREATE TABLE stanze (
-    id SERIAL PRIMARY KEY,
-    numero_stanza VARCHAR(10) NOT NULL,
-    tipologia VARCHAR(50) NOT NULL,
-    prezzo_base NUMERIC(10, 2) NOT NULL
-);
-
-CREATE TABLE prenotazioni (
-    id SERIAL PRIMARY KEY,
-    stanza_id INT REFERENCES stanze(id),
-    nome_cliente VARCHAR(100) NOT NULL,
-    check_in DATE NOT NULL,
-    check_out DATE NOT NULL,
-    prezzo_totale NUMERIC(10, 2),
-    stato VARCHAR(50) DEFAULT 'Confermata'
-);
-
--- Popola il DB con qualche stanza di prova
-INSERT INTO stanze (numero_stanza, tipologia, prezzo_base) VALUES 
-('101', 'Matrimoniale', 120.00),
-('102', 'Singola', 80.00),
-('201', 'Suite', 250.00);
-```
-*(Nota: La tabella `checkpoints`, usata dal bot per ricordare le conversazioni, viene creata **automaticamente** da LangGraph al primo avvio del sistema).*
+3. **Configurazione Database PostgreSQL**
+Il progetto si interfaccia con PostgreSQL tramite la variabile `DATABASE_URI` nel file `.env`.
+Devi creare manualmente un database `hotel_db` ed eseguire le query SQL presenti nel file `init.sql` per creare le tabelle e inserire i dati di prova.
 
 ### 6. Configurare Ollama (Embeddings Locali)
 Per analizzare i documenti testuali senza pagare API costose, il sistema usa embedding locali.
@@ -190,10 +178,18 @@ ollama run bge-m3:latest
 
 ## ▶️ Come Avviare l'Applicazione
 
-Una volta configurato il tutto, il bot è pronto ad operare:
+Una volta configurato il tutto (tramite Docker o Manualmente), il bot è pronto ad operare:
 
-### Avvio Web e Interfaccia Grafica (Raccomandato)
-Espone le API Backend e avvia il sito HTML in locale in un colpo solo.
+### Popolare il Database Vettoriale (Ingestion) - OBBLIGATORIO
+Se cloni il progetto per la prima volta, il database Qdrant sarà vuoto! Il bot non saprà rispondere a nessuna domanda sull'hotel.
+1. Inserisci i documenti di testo o PDF del tuo hotel nella cartella `markdown_docs/` (creala se non esiste).
+2. "Insegna" i documenti al bot caricandoli nel database vettoriale eseguendo (se usi Docker, fallo dal terminale del tuo PC o nel container):
+```bash
+python ingestion.py
+```
+
+### Avvio Web e Interfaccia Grafica
+Se non stai usando Docker, avvia il server manualmente:
 ```bash
 python server.py
 ```
@@ -203,10 +199,4 @@ python server.py
 Utile per diagnosticare il sistema e osservare i "log di pensiero" passo passo dell'AI.
 ```bash
 python main.py
-```
-
-### Ingestion dei Documenti
-Se aggiungi nuovi PDF dell'hotel nella cartella del progetto, ricordati di "insegnarli" al bot caricandoli nel database vettoriale:
-```bash
-python ingestion.py
 ```
