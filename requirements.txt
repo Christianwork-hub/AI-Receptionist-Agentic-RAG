@@ -2,6 +2,7 @@
 langchain>=0.3.0
 langchain-core>=0.3.0
 langchain-ollama>=0.2.0
+langchain-openai>=0.2.0
 langgraph>=0.2.35
 
 # ── Vector Database & RAG ───────────────────────────────────────────────────
@@ -28,6 +29,9 @@ pydantic>=2.9.0
 
 # ── UI & Utilities ──────────────────────────────────────────────────────────
 streamlit>=1.39.0
+gradio>=4.0.0
+fastapi>=0.100.0
+uvicorn>=0.30.0
 python-dotenv>=1.0.1
 tiktoken>=0.7.0
 pathlib>=1.0.1
