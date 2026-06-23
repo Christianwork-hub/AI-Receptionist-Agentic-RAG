@@ -120,6 +120,7 @@ L'utente prende il file `.env.example`, lo rinomina in `.env` e lo apre.
 
 **Cosa deve inserire :**
 - `DEEPSEEK_API_KEY`: Incolla la sua chiave di DeepSeek (altrimenti l'IA non pensa). 
+(se non si ha a disposizione una key per deepseek, utilizzare un modello ollama locale -> (Opzionale) Usare un LLM Locale al posto di DeepSeek -> ### 3.1))
 - `TAVILY_API_KEY`: Incolla la sua chiave di Tavily (altrimenti il bot non può cercare su internet).
 
 **Cosa può ignorare:**
