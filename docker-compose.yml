@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: hotel_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-tuo_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tua_password}
+      POSTGRES_DB: ${POSTGRES_DB:-hotel_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Esegue automaticamente l'inizializzazione
+
+  web:
+    build: .
+    container_name: ai_receptionist
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      # L'URL di connessione per il container Python verso il database
+      - DATABASE_URI=postgresql://${POSTGRES_USER:-tuo_user}:${POSTGRES_PASSWORD:-tua_password}@db:5432/${POSTGRES_DB:-hotel_db}
+      # Eredita le altre variabili dal file .env dell'host
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - EMAIL_MITTENTE=${EMAIL_MITTENTE}
+      - EMAIL_APP_PASSWORD=${EMAIL_APP_PASSWORD}
+      - EMAIL_DESTINATARIO=${EMAIL_DESTINATARIO}
+      # URL locale di Ollama dal punto di vista del container
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    volumes:
+      # Per mantenere persistenti i dati vettoriali in locale
+      - ./qdrant_data:/app/qdrant_data
+      - ./parent_store:/app/parent_store
+      - ./markdown_docs:/app/markdown_docs
+    depends_on:
+      - db
+    # Per permettere al container di comunicare con Ollama in esecuzione sull'host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  postgres_data:
