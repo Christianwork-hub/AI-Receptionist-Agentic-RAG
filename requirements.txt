@@ -1,0 +1,33 @@
+# ── Core Frameworks ──────────────────────────────────────────────────────────
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-ollama>=0.2.0
+langgraph>=0.2.35
+
+# ── Vector Database & RAG ───────────────────────────────────────────────────
+qdrant-client>=1.12.0
+langchain-qdrant>=0.2.0
+langchain-text-splitters>=0.3.0
+fastembed>=0.4.0
+
+# ── Database (PostgreSQL) ───────────────────────────────────────────────────
+psycopg[binary]>=3.2.1
+psycopg-pool>=3.2.2
+langgraph-checkpoint-postgres>=2.0.0
+
+# ── Web Search & Research ───────────────────────────────────────────────────
+tavily-python>=0.5.0
+
+# ── Evaluation & Metrics ────────────────────────────────────────────────────
+ragas>=0.1.0
+
+# ── PDF & Document Processing ───────────────────────────────────────────────
+opendataloader-pdf>=0.1.0
+pymupdf4llm>=0.0.17
+pydantic>=2.9.0
+
+# ── UI & Utilities ──────────────────────────────────────────────────────────
+streamlit>=1.39.0
+python-dotenv>=1.0.1
+tiktoken>=0.7.0
+pathlib>=1.0.1

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Hotel Sassi | Matera</title>
+    <link rel="stylesheet" href="/style.css?v=1.4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <nav class="navbar">
+            <div class="logo">Grand Hotel Sassi</div>
+            <ul class="nav-links">
+                <li><a href="#hotel">L'Hotel</a></li>
+                <li><a href="#camere">Le Camere</a></li>
+                <li><a href="#esperienze">Esperienze</a></li>
+            </ul>
+        </nav>
+        <div class="hero-content">
+            <h1>L'essenza di Matera.</h1>
+            <p>Vivi l'esperienza indimenticabile di soggiornare nel cuore dei Sassi, dove la storia millenaria incontra
+                il comfort contemporaneo.</p>
+            <button class="cta-button" onclick="toggleChat()">Prenota il tuo soggiorno</button>
+        </div>
+    </header>
+
+    <!-- SEZIONE: L'HOTEL -->
+    <section id="hotel" class="section section-hotel">
+        <div class="container">
+            <div class="hotel-content">
+                <div class="hotel-text">
+                    <h2 class="section-title">La Nostra Storia</h2>
+                    <p>Fondato nel 2010 e completamente rinnovato nel 2025, il <strong>Grand Hotel Sassi</strong> è
+                        incastonato nel cuore del Sasso Caveoso, in Via Bruno Buozzi, Matera.</p>
+                    <p>La nostra posizione strategica offre una vista mozzafiato sul canyon della Gravina ed è a pochi
+                        passi dalle principali attrazioni storiche. Ci impegniamo a offrire un'esperienza alberghiera
+                        eccezionalmente pulita, sicura e accogliente.</p>
+
+                    <ul class="hotel-features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                                <line x1="6" y1="1" x2="6" y2="4"></line>
+                                <line x1="10" y1="1" x2="10" y2="4"></line>
+                                <line x1="14" y1="1" x2="14" y2="4"></line>
+                            </svg>
+                            <span><strong>Colazione a Buffet:</strong> Prodotti tipici dalle 07:00 alle 10:00.</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 12h20M12 2v20"></path>
+                                <circle cx="12" cy="12" r="10"></circle>
+                            </svg>
+                            <span><strong>Spa & Benessere:</strong> Termale, aperta dalle 10:00 alle 20:00.</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span><strong>Sicurezza & Parcheggio:</strong> Car Valet con garage convenzionato.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="hotel-image">
+                    <img src="/assets/vista_sassi.jpg" alt="Vista sui Sassi di Matera">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEZIONE: LE CAMERE -->
+    <section id="camere" class="section section-camere bg-light">
+        <div class="container">
+            <h2 class="section-title text-center">Le Nostre Camere</h2>
+            <p class="section-subtitle text-center">20 camere esclusive su due livelli dotate di Wi-Fi gratuito,
+                climatizzazione autonoma, Smart TV e minibar.</p>
+
+            <div class="cards-grid">
+                <!-- Camera Singola -->
+                <div class="card">
+                    <img src="/assets/singola.jpeg" alt="Camera Singola">
+                    <div class="card-content">
+                        <h3>Camera Singola</h3>
+                        <p>Ideale per viaggiatori solitari o business. Un ambiente confortevole e moderno con tutti i
+                            servizi essenziali.</p>
+                        <div class="room-details">1 Posto Letto</div>
+                    </div>
+                </div>
+
+                <!-- Camera Matrimoniale -->
+                <div class="card">
+                    <img src="/assets/doppia.jpeg" alt="Camera Matrimoniale">
+                    <div class="card-content">
+                        <h3>Camera Matrimoniale</h3>
+                        <p>Romantica, con pareti in tufo a vista caratteristiche di Matera e comodo letto Queen-size.
+                        </p>
+                        <div class="room-details">2 Posti Letto</div>
+                    </div>
+                </div>
+
+                <!-- Camera Tripla -->
+                <div class="card">
+                    <img src="/assets/tripla.jpeg" alt="Camera tripla">
+                    <div class="card-content">
+                        <h3>Camera Tripla</h3>
+                        <p>Camere Triple ampie e spaziose, perfette per le famiglie che visitano la città.
+                        </p>
+                        <div class="room-details">3 Posti Letto</div>
+                    </div>
+                </div>
+
+                <!-- Camera Quadrupla -->
+                <div class="card">
+                    <img src="/assets/quadrupla.jpeg" alt="Camera quadrupla">
+                    <div class="card-content">
+                        <h3>Camera Qudrupla</h3>
+                        <p>Camere Quadruple ampie e spaziose, perfette per le famiglie che visitano la città.
+                        </p>
+                        <div class="room-details">4 Posti Letto</div>
+                    </div>
+                </div>
+
+                <!-- Suite -->
+                <div class="card">
+                    <img src="/assets/suite.jpeg" alt="Suite">
+                    <div class="card-content">
+                        <h3>La Suite</h3>
+                        <p>Zona giorno e notte separate, vasca idromassaggio privata scavata nella roccia e accesso
+                            esclusivo alla Spa incluso.</p>
+                        <div class="room-details">4 Posti Letto • Spa Access</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEZIONE: ESPERIENZE -->
+    <section id="esperienze" class="section section-esperienze">
+        <div class="container">
+            <h2 class="section-title text-center">Esperienze a Matera</h2>
+            <p class="section-subtitle text-center">Vivi la magia della Capitale della Cultura attraverso attività
+                pensate su misura per te.</p>
+
+            <div class="esperienze-list">
+                <div class="esperienza-item">
+                    <div class="esperienza-img">
+                        <img src="/assets/Una-notte-a-Matera.jpg" alt="Tour dei Sassi">
+                    </div>
+                    <div class="esperienza-text">
+                        <h3>Tour Guidato dei Sassi</h3>
+                        <p>Una passeggiata privata tra i vicoli millenari del Sasso Caveoso e del Sasso Barisano, con
+                            visita alle spettacolari chiese rupestri scavate nella roccia.</p>
+                    </div>
+                </div>
+
+                <div class="esperienza-item">
+                    <div class="esperienza-img">
+                        <img src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=600&auto=format&fit=crop"
+                            alt="Degustazione">
+                    </div>
+                    <div class="esperienza-text">
+                        <h3>Degustazione Lucana</h3>
+                        <p>Scopri i sapori autentici della Basilicata nella nostra antica cantina in tufo. Vini locali
+                            selezionati, formaggi tipici e il famoso pane di Matera.</p>
+                    </div>
+                </div>
+
+                <div class="esperienza-item">
+                    <div class="esperienza-img">
+                        <img src="/assets/trekking.jpg" alt="Trekking">
+                    </div>
+                    <div class="esperienza-text">
+                        <h3>Trekking sulla Murgia</h3>
+                        <p>Un'escursione indimenticabile sul canyon della Gravina, proprio di fronte all'hotel. Il punto
+                            panoramico perfetto per ammirare Matera illuminata al tramonto.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <h2 class="footer-logo">Grand Hotel Sassi</h2>
+            <p>Via Bruno Buozzi, 75100 Matera (MT) • Italia</p>
+            <p class="footer-copy">© 2026 Grand Hotel Sassi. Tutti i diritti riservati. Powered by AI Receptionist.</p>
+        </div>
+    </footer>
+    <!-- Popup Benvenuto Chatbot -->
+    <div id="chat-popup" class="chat-popup" onclick="toggleChat()">
+        <span>Ciao sono HotelAI, come posso aiutarti? 👋</span>
+        <button class="close-popup-btn" onclick="closeChatPopup(event)">&times;</button>
+        <div class="chat-popup-tail"></div>
+    </div>
+
+    <!-- Widget Chat Bottone -->
+    <button id="chat-fab" class="chat-fab" onclick="toggleChat()">
+        <!-- Icona messaggio -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </button>
+
+    <!-- Widget Chat Finestra -->
+    <div id="chat-widget" class="chat-widget hidden">
+        <div class="chat-header">
+            <div>
+                <div class="chat-title">AI Receptionist</div>
+                <div class="chat-subtitle">Sempre online per aiutarti</div>
+            </div>
+            <button class="close-btn" onclick="toggleChat()">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages">
+            <div class="message ai-message">
+                <div class="message-content">
+                    Buongiorno! Sono l'AI Receptionist del Grand Hotel Sassi. ✨
+                    <br><br>
+                    Come posso aiutarti oggi? Puoi chiedermi informazioni sui servizi o effettuare/cancellare una
+                    prenotazione.
+                </div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Scrivi un messaggio..." onkeypress="handleKeyPress(event)">
+            <button class="send-btn" onclick="sendMessage()">
+                <!-- Icona invio -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Libreria per tradurre il Markdown in HTML nel frontend -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/script.js"></script>
+</body>
+
+</html>
