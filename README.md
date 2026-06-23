@@ -13,7 +13,7 @@ Questo progetto non è un semplice chatbot basato su prompt, ma un vero e propri
 Ecco come è strutturato il codice sorgente e dove si trova la logica. Ogni file ha uno scopo preciso per mantenere l'architettura pulita e scalabile.
 
 ```text
-AI_Receptionist_V3/
+AI-Receptionist-Agentic-RAG/
 │
 ├── server.py                 # (Entry Point Web) Avvia FastAPI, espone l'API /api/chat e serve la UI HTML.
 ├── main.py                   # (Entry Point CLI) Avvia il bot nel terminale per fare test rapidi come sviluppatore.
@@ -109,51 +109,51 @@ Ecco alcuni esempi pratici di cosa può gestire questo sistema:
 *(Nota: L'ambiente virtuale e il file `.env` non sono inclusi nella repository per questioni di sicurezza. Seguendo questi passaggi avvierai tutto in locale).*
 
 ### 1. Il Download
-L'utente apre il terminale, scarica il progetto ed entra nella cartella:
+Aprire il terminale, scaricare il progetto tramite Git ed entrare nella directory principale:
 ```bash
 git clone https://github.com/Christianwork-hub/AI-Receptionist-Agentic-RAG.git
 cd AI-Receptionist-Agentic-RAG
 ```
 
 ### 2. Le Chiavi (Il file `.env`)
-L'utente prende il file `.env.example`, lo rinomina in `.env` e lo apre. 
+Nel progetto è presente un file chiamato `.env.example`. Rinominarlo in `.env` e aprirlo per la configurazione. 
 
-**Cosa deve inserire :**
-- `DEEPSEEK_API_KEY`: Incolla la sua chiave di DeepSeek (altrimenti l'IA non pensa). 
-(se non si ha a disposizione una key per deepseek, utilizzare un modello ollama locale -> (Opzionale) Usare un LLM Locale al posto di DeepSeek -> ### 3.1))
-- `TAVILY_API_KEY`: Incolla la sua chiave di Tavily (altrimenti il bot non può cercare su internet).
+**Variabili da inserire:**
+- `DEEPSEEK_API_KEY`: Inserire la chiave API di DeepSeek (necessaria per il motore inferenziale dell'IA). 
+  *(Se non si ha a disposizione una key per DeepSeek, è possibile utilizzare un modello Ollama locale -> Vedi la sezione 3.1)*
+- `TAVILY_API_KEY`: Inserire la chiave API di Tavily (necessaria per permettere al bot di cercare informazioni sul web).
 
-**Cosa può ignorare:**
-- Non deve toccare nulla della sezione Database (niente `DATABASE_URI`, ci penserà Docker a collegare i due sistemi).
+**Variabili da NON modificare:**
+- Lasciare inalterata la sezione Database (incluso `DATABASE_URI`). La connessione tra applicazione e database verrà gestita automaticamente dalla rete interna di Docker.
 
 ### 3. La dipendenza locale (Ollama)
-L'utente deve avere Ollama installato sul proprio computer (fuori da Docker). Apre un terminale a parte e lancia:
+È richiesto Ollama installato sulla macchina host (fuori da Docker). Aprire un terminale separato ed eseguire:
 ```bash
 ollama run bge-m3:latest
 ```
-*Questo serve a mantenere gli "embedding" gratuiti e veloci usando il suo processore.*
+*Questo passaggio permette di generare gli "embedding" vettoriali in locale, in modo veloce e gratuito.*
 
 ### 3.1 🤖 (Opzionale) Usare un LLM Locale al posto di DeepSeek
-Se non vuoi utilizzare DeepSeek e vuoi un sistema **100% gratuito e offline**, puoi far generare le risposte al tuo computer tramite Ollama. 
-Per farlo:
-1. Apri il file `config.py`.
-2. Trova il blocco di codice relativo a `llm = ChatOpenAI(...)` (DeepSeek) e commentalo (aggiungendo i `#` all'inizio di ogni riga).
-3. Rimuovi i commenti dal blocco intitolato `"Configurazione alternativa con modello locale Ollama"`.
-4. Scegli il tuo modello (es. `"llama3.1:8b"`) e assicurati di averlo scaricato tramite terminale (`ollama run llama3.1:8b`).
-*(Nota: L'URL `LLM_API_BASE` sarà `http://localhost:11434` se lo usi in locale, oppure `https://ollama.com` o simili se ti appoggi a servizi cloud Ollama)*.
+Per utilizzare un sistema **100% gratuito e offline** senza DeepSeek, è possibile affidare la generazione delle risposte a Ollama. 
+Per procedere:
+1. Aprire il file `config.py`.
+2. Trovare il blocco di codice relativo a `llm = ChatOpenAI(...)` (DeepSeek) e commentarlo (aggiungendo un `#` all'inizio di ogni riga).
+3. Rimuovere i commenti dal blocco intitolato `"Configurazione alternativa con modello locale Ollama"`.
+4. Scegliere il modello desiderato (es. `"llama3.1:8b"`) e assicurarsi di averlo scaricato tramite terminale (`ollama run llama3.1:8b`).
+*(Nota: L'URL `LLM_API_BASE` dovrà essere `http://localhost:11434` per le esecuzioni in locale, oppure `https://ollama.com` o simili se ci si appoggia a servizi cloud Ollama)*.
 
 ---
 
 ### 4. Il comando (L'avvio di Docker)
-Ora l'utente lancia il comando:
+Avviare i container lanciando il comando:
 ```bash
 docker-compose up -d --build
 ```
 **Cosa succede in automatico in questo momento?**
-- Docker scarica un computer "virtuale" con PostgreSQL. Non appena Postgres si accende, legge il tuo file `init.sql`, crea il database `hotel_db`, crea la tabella `stanze` e ci infila dentro la "Suite" e la "Matrimoniale". **Zero stress per l'utente.**
-- Docker crea un secondo computer virtuale con Python, installa tutte le librerie del `requirements.txt` (FastAPI, LangGraph, ecc.) e avvia il tuo server `server.py` esponendolo sulla porta 8000.
+- Docker scarica un ambiente isolato con PostgreSQL. Non appena Postgres si avvia, legge il file `init.sql`, crea il database `hotel_db`, crea le tabelle `stanze` e `prenotazioni` e ci inserisce dentro i dati iniziali (così il bot conosce la disponibilità dell'hotel).
+- Docker crea un secondo ambiente con Python, installa tutte le librerie elencate in `requirements.txt` (FastAPI, LangGraph, ecc.) e avvia il server `server.py` esponendolo sulla porta 8000.
 
-*(Se l'utente non vuole usare Docker, troverà le istruzioni manuali in fondo alla pagina).*
+*(Per l'installazione manuale senza Docker, fare riferimento al METODO 2 a fine pagina).*
 
 ---
 
@@ -189,23 +189,24 @@ ollama run bge-m3:latest
 
 ---
 
-## ▶️ 5. Dar da mangiare al Bot (L'Ingestion)
+## ▶️ 5. Dare i documenti al Bot (L'Ingestion)
 
 A questo punto il server è acceso e il database SQL è pronto, ma **il bot ha la memoria vuota** (non conosce le regole dell'hotel perché Qdrant è vuoto).
-L'utente mette un finto regolamento PDF nella cartella `markdown_docs/`. Poi, per processarlo usando l'ambiente Docker (senza dover installare Python sul proprio PC), lancia questo comando:
+Nella cartella principale è già presente un file di base chiamato `Regole_Hotel.pdf` (il file principale utilizzato per testare il sistema). È possibile sostituirlo con un regolamento personalizzato: in tal caso, inserire il nuovo PDF nella cartella principale rinominandolo in `Regole_Hotel.pdf` (oppure aggiornare il nome del file desiderato alla riga 257 di `ingestion.py`).
+Per processare il file e popolare il database vettoriale sfruttando l'ambiente Docker (senza la necessità di installare Python localmente), eseguire il seguente comando:
 
 ```bash
 docker exec -it ai_receptionist python ingestion.py
 ```
-*Docker esegue lo script dentro il container: i documenti vengono spezzettati, trasformati in vettori da Ollama e salvati in Qdrant.*
+*Questo comando esegue lo script all'interno del container: i documenti verranno frammentati, trasformati in vettori tramite Ollama e salvati in Qdrant.*
 
 ---
 
-## 🎉 6. Fine! Si gioca.
-L'utente apre il browser, va su **[http://localhost:8000](http://localhost:8000)** e inizia a chattare con il bot. 
-Se chiede di prenotare la Suite per domani, il sistema funziona perfettamente perché Docker ha già collegato l'app al database Postgres popolato!
+##  6. Il bot entra in azione!
+Aprire il browser all'indirizzo **[http://localhost:8000](http://localhost:8000)** per accedere all'interfaccia e iniziare a chattare con il bot. 
+Il sistema sarà subito operativo: chiedendo ad esempio di prenotare una stanza, interagirà correttamente con il database PostgreSQL appena popolato in automatico da Docker!
 
-*(Nota: Se hai avviato il bot in Modalità Terminale sviluppatore senza Docker, l'app risponderà eseguendo `python main.py` o `python server.py`).*
+*(Nota: Avviando il progetto in Modalità Terminale senza Docker, l'esecuzione avverrà tramite `python main.py` o `python server.py`).*
 
 ### Avvio in Modalità Terminale (Sviluppatori)
 Utile per diagnosticare il sistema e osservare i "log di pensiero" passo passo dell'AI.
