@@ -108,39 +108,51 @@ Ecco alcuni esempi pratici di cosa può gestire questo sistema:
 
 *(Nota: L'ambiente virtuale e il file `.env` non sono inclusi nella repository per questioni di sicurezza. Seguendo questi passaggi avvierai tutto in locale).*
 
-### 1. Clonare la Repository
+### 1. Il Download
+L'utente apre il terminale, scarica il progetto ed entra nella cartella:
 ```bash
 git clone https://github.com/Christianwork-hub/AI-Receptionist-Agentic-RAG.git
 cd AI-Receptionist-Agentic-RAG
 ```
 
-### 2. Creare e Configurare il file `.env` (OBBLIGATORIO)
-Nel progetto troverai un file chiamato **`.env.example`**. 
-Rinominalo in **`.env`** e compila i campi con le tue chiavi API. 
-**ATTENZIONE: Senza le API Key di DeepSeek e Tavily il progetto andrà in errore!**
-(Tranquillo, il `.gitignore` impedirà che il tuo `.env` venga caricato online).
+### 2. Le Chiavi (Il file `.env`)
+L'utente prende il file `.env.example`, lo rinomina in `.env` e lo apre. 
 
-### 3. Configurare Ollama (Embeddings Locali)
-Per analizzare i documenti testuali senza pagare API costose, il sistema usa embedding locali.
-Assicurati di aver installato [Ollama](https://ollama.com/) sul tuo PC e scarica il modello eseguendo:
+**Cosa deve inserire OBBLIGATORIAMENTE:**
+- `DEEPSEEK_API_KEY`: Incolla la sua chiave di DeepSeek (altrimenti l'IA non pensa).
+- `TAVILY_API_KEY`: Incolla la sua chiave di Tavily (altrimenti il bot non può cercare su internet).
+
+**Cosa può ignorare:**
+- Non deve toccare nulla della sezione Database (niente `DATABASE_URI`, ci penserà Docker a collegare i due sistemi).
+
+### 3. La dipendenza locale (Ollama)
+L'utente deve avere Ollama installato sul proprio computer (fuori da Docker). Apre un terminale a parte e lancia:
 ```bash
 ollama run bge-m3:latest
 ```
+*Questo serve a mantenere gli "embedding" gratuiti e veloci usando il suo processore.*
+
+### 3.1 🤖 (Opzionale) Usare un LLM Locale al posto di DeepSeek
+Se non vuoi utilizzare DeepSeek e vuoi un sistema **100% gratuito e offline**, puoi far generare le risposte al tuo computer tramite Ollama. 
+Per farlo:
+1. Apri il file `config.py`.
+2. Trova il blocco di codice relativo a `llm = ChatOpenAI(...)` (DeepSeek) e commentalo (aggiungendo i `#` all'inizio di ogni riga).
+3. Rimuovi i commenti dal blocco intitolato `"Configurazione alternativa con modello locale Ollama"`.
+4. Scegli il tuo modello (es. `"llama3.1:8b"`) e assicurati di averlo scaricato tramite terminale (`ollama run llama3.1:8b`).
+*(Nota: L'URL `LLM_API_BASE` sarà `http://localhost:11434` se lo usi in locale, oppure `https://ollama.com` o simili se ti appoggi a servizi cloud Ollama)*.
 
 ---
 
-### METODO 1: Avvio Rapido con Docker (Raccomandato)
-Se hai **Docker** installato sul tuo computer, l'installazione richiede un solo comando.
-Docker scaricherà le dipendenze, creerà il database PostgreSQL (`hotel_db`), creerà le tabelle `stanze` e `prenotazioni` e popolerà i dati mock per te.
-
-1. Assicurati che Docker sia in esecuzione.
-2. Dal terminale esegui:
+### 4. Il comando (L'avvio di Docker)
+Ora l'utente lancia il comando:
 ```bash
 docker-compose up -d --build
 ```
-3. Il server web è ora attivo all'indirizzo **[http://localhost:8000](http://localhost:8000)**.
+**Cosa succede in automatico in questo momento?**
+- Docker scarica un computer "virtuale" con PostgreSQL. Non appena Postgres si accende, legge il tuo file `init.sql`, crea il database `hotel_db`, crea la tabella `stanze` e ci infila dentro la "Suite" e la "Matrimoniale". **Zero stress per l'utente.**
+- Docker crea un secondo computer virtuale con Python, installa tutte le librerie del `requirements.txt` (FastAPI, LangGraph, ecc.) e avvia il tuo server `server.py` esponendolo sulla porta 8000.
 
-*(Se non vuoi usare Docker, segui il Metodo 2 qui sotto, altrimenti salta alla sezione Ingestion).*
+*(Se l'utente non vuole usare Docker, troverà le istruzioni manuali in fondo alla pagina).*
 
 ---
 
@@ -176,24 +188,23 @@ ollama run bge-m3:latest
 
 ---
 
-## ▶️ Come Avviare l'Applicazione
+## ▶️ 5. Dar da mangiare al Bot (L'Ingestion)
 
-Una volta configurato il tutto (tramite Docker o Manualmente), il bot è pronto ad operare:
+A questo punto il server è acceso e il database SQL è pronto, ma **il bot ha la memoria vuota** (non conosce le regole dell'hotel perché Qdrant è vuoto).
+L'utente mette un finto regolamento PDF nella cartella `markdown_docs/`. Poi, per processarlo usando l'ambiente Docker (senza dover installare Python sul proprio PC), lancia questo comando:
 
-### Popolare il Database Vettoriale (Ingestion) - OBBLIGATORIO
-Se cloni il progetto per la prima volta, il database Qdrant sarà vuoto! Il bot non saprà rispondere a nessuna domanda sull'hotel.
-1. Inserisci i documenti di testo o PDF del tuo hotel nella cartella `markdown_docs/` (creala se non esiste).
-2. "Insegna" i documenti al bot caricandoli nel database vettoriale eseguendo (se usi Docker, fallo dal terminale del tuo PC o nel container):
 ```bash
-python ingestion.py
+docker exec -it ai_receptionist python ingestion.py
 ```
+*Docker esegue lo script dentro il container: i documenti vengono spezzettati, trasformati in vettori da Ollama e salvati in Qdrant.*
 
-### Avvio Web e Interfaccia Grafica
-Se non stai usando Docker, avvia il server manualmente:
-```bash
-python server.py
-```
-👉 Vai sul tuo browser all'indirizzo: **[http://localhost:8000](http://localhost:8000)**
+---
+
+## 🎉 6. Fine! Si gioca.
+L'utente apre il browser, va su **[http://localhost:8000](http://localhost:8000)** e inizia a chattare con il bot. 
+Se chiede di prenotare la Suite per domani, il sistema funziona perfettamente perché Docker ha già collegato l'app al database Postgres popolato!
+
+*(Nota: Se hai avviato il bot in Modalità Terminale sviluppatore senza Docker, l'app risponderà eseguendo `python main.py` o `python server.py`).*
 
 ### Avvio in Modalità Terminale (Sviluppatori)
 Utile per diagnosticare il sistema e osservare i "log di pensiero" passo passo dell'AI.
